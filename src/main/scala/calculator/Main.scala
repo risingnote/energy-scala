@@ -8,8 +8,7 @@ object Main extends App {
   val cmdFile = Paths.get(System.getProperty("user.dir"), "resources/input.txt")
   val pricesFile = Paths.get(System.getProperty("user.dir"), "resources/prices.json")
 
-  val tariffPrices = prices.parsePrices(pricesFile.toString)
-  println(tariffPrices)
+  val tariffPrices = Tariffs.parsePrices(pricesFile.toString)
 
   Source
     .fromFile(cmdFile.toString, "utf8")
@@ -18,10 +17,12 @@ object Main extends App {
       val costPattern = "cost\\s+(\\d+)\\s+(\\d+)".r
       val usagePattern = "usage\\s+(.+)\\s+(.+)\\s+(\\d+)".r
       line match {
-        case costPattern(power, gas) => List(power, gas)
-        case usagePattern(tariffName, energyType, mthlySpend) => List(tariffName, energyType, mthlySpend)
-        case _ => "Unknown command " + line
+        case costPattern(power, gas) => line ::
+          AnnualCost.calculate(new Usage(power.toInt, gas.toInt), tariffPrices)
+        case usagePattern(tariffName, energyType, mthlySpend) =>
+          List(tariffName, energyType, mthlySpend)
+        case _ => List("Unknown command " + line)
       }
     }
-    .foreach(println)
+    .foreach(x => x.map(println))
 }

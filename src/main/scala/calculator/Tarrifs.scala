@@ -4,19 +4,19 @@ import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 
 import scala.io.Source
 
-case class Rates(power: Option[Float], gas: Option[Float])
+case class Rates(power: Option[Double], gas: Option[Double])
 
 object Rates {
   implicit val ratesReads = Json.reads[Rates]
 }
 
-case class Tariff(tariff: String, rates: Rates, standing_charge: Float)
+case class Tariff(tariff: String, rates: Rates, standing_charge: Double)
 
 object Tariff {
   implicit val tariffReads = Json.reads[Tariff]
 }
 
-object prices {
+object Tariffs {
   def parsePrices(fileName: String): List[Tariff] = {
 
     val jsonString = Source
