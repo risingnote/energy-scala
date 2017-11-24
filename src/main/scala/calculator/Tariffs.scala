@@ -1,10 +1,21 @@
+/**
+  * Load tariff prices from JSON file into List of Tariff objects.
+  */
 package calculator
 
 import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 
 import scala.io.Source
 
-case class Rates(power: Option[Double], gas: Option[Double])
+case class Rates(power: Option[Double], gas: Option[Double]) {
+  def getForEnergyType(energyType: String): Option[Double] = {
+    energyType match {
+      case "power" => power
+      case "gas" => gas
+      case "_" => None
+    }
+  }
+}
 
 object Rates {
   implicit val ratesReads = Json.reads[Rates]
