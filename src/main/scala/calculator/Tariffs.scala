@@ -12,7 +12,7 @@ case class Rates(power: Option[Double], gas: Option[Double]) {
     energyType match {
       case "power" => power
       case "gas" => gas
-      case "_" => None
+      case _ => None
     }
   }
 }
